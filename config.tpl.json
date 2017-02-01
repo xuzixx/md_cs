@@ -1,0 +1,15 @@
+{
+    "result_base_path": "",
+    "url_conf_tmp": "",
+    "url_img_tmp": "",
+
+    "header_refer_tmp": "",
+    "header_origin": "",
+    
+    "re_chapter": "",
+
+    "books": [
+        {"c_book": "", "c_url": ""},
+        {"c_book": "", "c_url": ""}
+    ]
+}

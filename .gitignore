@@ -1,0 +1,6 @@
+wx.md
+.*.swp
+*_test.go
+result/
+config.json
+md_cs
