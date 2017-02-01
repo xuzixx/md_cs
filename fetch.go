@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"strings"
+	"sync"
 
 	"github.com/astaxie/beego/httplib"
 	"github.com/tidwall/gjson"
@@ -61,7 +62,9 @@ func FetchChapter(id string, c Config) ([]string, error) {
 	return parseConfigJson(str)
 }
 
-func FetchImg(id string, path string, postfix string, c Config) {
+func FetchImg(id string, path string, postfix string, c Config, wg *sync.WaitGroup) {
+	defer wg.Done()
+
 	imgURL := fmt.Sprintf(c.URLImgTmp, id, postfix)
 	referURL := fmt.Sprintf(c.HeaderReferTmp, id)
 

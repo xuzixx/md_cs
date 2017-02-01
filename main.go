@@ -5,16 +5,19 @@ import (
 	"log"
 	"os"
 	"regexp"
+	"sync"
 
 	"github.com/urfave/cli"
 )
 
 var (
 	RE_CHAPTER *regexp.Regexp
+	wg         sync.WaitGroup
 )
 
 func start(c Config) {
 	for _, book := range c.Books {
+		log.Printf("Start Fetch book %s\n", book.BookName)
 		idTitles, err := FetchOmnibus(book)
 		if err != nil {
 			log.Printf("Error FetchOmnibus %s: %s\n", book.BookName, err.Error())
@@ -39,13 +42,15 @@ func start(c Config) {
 				}
 
 				for _, p := range postfix {
-					go FetchImg(id, path, p, c)
+					wg.Add(1)
+					go FetchImg(id, path, p, c, &wg)
 				}
 			} else {
 				log.Printf("%s already exist", msg)
 			}
 		}
 	}
+	wg.Wait()
 }
 
 func main() {
@@ -72,7 +77,6 @@ func main() {
 		if err != nil {
 			log.Fatalf("Failed to parse json config file: %s", confFile)
 		}
-		log.Printf("%#v\n", cnf)
 		start(cnf)
 		return nil
 	}
