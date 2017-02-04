@@ -11,6 +11,11 @@ import (
 	"github.com/tidwall/gjson"
 )
 
+var (
+	MAXPARALLEL = 20
+	sema        = make(chan struct{}, MAXPARALLEL)
+)
+
 func parseIndexHTML(content string) (map[string]string, error) {
 	idTitles := make(map[string]string)
 
@@ -63,6 +68,8 @@ func FetchChapter(id string, c Config) ([]string, error) {
 }
 
 func FetchImg(id string, path string, postfix string, c Config, wg *sync.WaitGroup) {
+	sema <- struct{}{}
+	defer func() { <-sema }()
 	defer wg.Done()
 
 	imgURL := fmt.Sprintf(c.URLImgTmp, id, postfix)
