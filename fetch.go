@@ -88,3 +88,22 @@ func FetchImg(id string, path string, postfix string, c Config, wg *sync.WaitGro
 		log.Printf("Error FetchImg %s to %s, %s\n", imgURL, path, err.Error())
 	}
 }
+
+func FetchImgByURL(imgURL, path string, c Config) {
+	items := strings.Split(imgURL, "/")
+	id := items[4]
+	log.Printf("id: %s\n", id)
+	referURL := fmt.Sprintf(c.HeaderReferTmp, id)
+
+	filename := items[len(items)-1]
+	filePth := fmt.Sprintf("%s/%s", path, filename)
+
+	req := httplib.Get(imgURL)
+	req.Header("Origin", c.HeaderOrigin)
+	req.Header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/602.2.14 (KHTML, like Gecko) Version/10.0.1 Safari/602.2.14")
+	req.Header("Referer", referURL)
+	err := req.ToFile(filePth)
+	if err != nil {
+		log.Printf("Error FetchImgByURL %s to %s, %s\n", imgURL, path, err.Error())
+	}
+}
