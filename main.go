@@ -4,19 +4,19 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"regexp"
 	"sync"
 
 	"github.com/urfave/cli"
+	"github.com/xuzixx/md_cs/g"
 )
 
+//
 var (
-	RE_CHAPTER *regexp.Regexp
-	wg         sync.WaitGroup
+	wg sync.WaitGroup
 )
 
-func start(c Config) {
-	for _, book := range c.Books {
+func start() {
+	for _, book := range g.Config().Books {
 		log.Printf("Start Fetch book %s\n", book.BookName)
 		idTitles, err := FetchOmnibus(book)
 		if err != nil {
@@ -26,7 +26,7 @@ func start(c Config) {
 
 		for id, title := range idTitles {
 			msg := fmt.Sprintf("%s-%s-%s", book.BookName, id, title)
-			path := fmt.Sprintf("%s/%s/%s", c.ResultBasePath, book.BookName, title)
+			path := fmt.Sprintf("%s/%s/%s", g.Config().ResultBasePath, book.BookName, title)
 
 			if _, err := os.Stat(path); os.IsNotExist(err) {
 				err = os.MkdirAll(path, 0777)
@@ -35,7 +35,7 @@ func start(c Config) {
 					continue
 				}
 
-				postfix, err := FetchChapter(id, c)
+				postfix, err := FetchChapter(id)
 				if err != nil {
 					log.Printf("Error %s, %s", msg, err.Error())
 					continue
@@ -43,7 +43,7 @@ func start(c Config) {
 
 				for _, p := range postfix {
 					wg.Add(1)
-					go FetchImg(id, path, p, c, &wg)
+					go FetchImg(id, path, p, &wg)
 				}
 			} else {
 				log.Printf("%s already exist", msg)
@@ -57,7 +57,7 @@ func main() {
 
 	app := cli.NewApp()
 	app.Name = "MD_CS"
-	app.Version = "0.1"
+	app.Version = g.VERSION
 	app.Usage = "Comic Spider"
 
 	app.Flags = []cli.Flag{
@@ -70,14 +70,10 @@ func main() {
 
 	app.Action = func(ctx *cli.Context) error {
 		confFile := ctx.String("conf")
-		if _, err := os.Stat(confFile); os.IsNotExist(err) {
-			log.Fatalf("config file does not exist: %s", confFile)
-		}
-		cnf, err := loadConfig(confFile)
-		if err != nil {
-			log.Fatalf("Failed to parse json config file: %s", confFile)
-		}
-		start(cnf)
+
+		g.ParseConfig(confFile)
+
+		start()
 		return nil
 	}
 
