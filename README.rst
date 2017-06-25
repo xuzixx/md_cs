@@ -40,3 +40,11 @@ TODO
 
 - config 的json 落地一份？
 
+API
+===
+
+
+::
+
+    curl "http://127.0.0.1:8080/v1/book" -X POST -d '{"name":"book2"}'
+    curl "http://127.0.0.1:8080/v1/book/1"
