@@ -16,7 +16,7 @@ type BookController struct {
 
 // URLMapping 性能提升
 func (c *BookController) URLMapping() {
-
+	c.Mapping("/v1/books", c.All)
 }
 
 // All ...
@@ -26,7 +26,7 @@ func (c *BookController) All() {
 }
 
 // Create ...
-// @router /v1/book [post]
+// @router /v1/books [post]
 func (c *BookController) Create() {
 	b := &models.Book{}
 
@@ -48,26 +48,23 @@ func (c *BookController) Create() {
 }
 
 // Get ...
-// @router /v1/book/:id [get]
+// @router /v1/books/:id [get]
 func (c *BookController) Get() {
 	idParam := c.Ctx.Input.Param(":id")
 	id, err := strconv.Atoi(idParam)
 	if err != nil {
-		log.Fatal(err)
+		c.ErrorJSON(err)
+		return
 	}
 
 	book := &models.Book{ID: id}
 	err = models.GetOne(book)
 	if err != nil {
-		log.Fatal(err)
-	}
-	b, err := json.Marshal(book)
-	if err != nil {
-		log.Fatal(err)
+		c.ErrorJSON(err)
+		return
 	}
 
-	c.Data["json"] = string(b)
-	c.ServeJSON()
+	c.SuccessJSON(book)
 }
 
 // TODO Update

@@ -36,6 +36,24 @@ func (c *baseController) redirect(url string) {
 	c.StopRun()
 }
 
+func (c *baseController) SuccessJSON(out interface{}) {
+	c.Data["json"] = map[string]interface{}{
+		"code": 0,
+		"data": out,
+	}
+
+	c.ServeJSON()
+}
+
+func (c *baseController) ErrorJSON(err error) {
+	c.Data["json"] = map[string]interface{}{
+		"code":    1,
+		"message": err.Error(),
+	}
+
+	c.ServeJSON()
+}
+
 func (c *baseController) loginCheck() {
 	user := c.GetSession("_login_user")
 	if user == nil {
