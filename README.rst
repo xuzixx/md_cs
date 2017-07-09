@@ -30,21 +30,37 @@ DB
 
     create table test (id INTEGER PRIMARY KEY AUTOINCREMENT, data char(50))
 
-TODO
-====
-
-
-- 指定重新下载 某话的某页
-
-- 定时任务通知新抓去的漫画
-
-- config 的json 落地一份？
-
-API
-===
-
+Swagger
+=======
 
 ::
 
-    curl "http://127.0.0.1:8080/v1/book" -X POST -d '{"name":"book2"}'
-    curl "http://127.0.0.1:8080/v1/book/1"
+    bee run -gendoc=true -downdoc=true
+
+http://127.0.0.1:8080/swagger/
+
+**refer**
+
+::
+
+    https://beego.me/docs/advantage/docs.md
+    https://my.oschina.net/astaxie/blog/284072
+
+
+Version
+=======
+
++---------------+--------+
+| beego         | v1.8.4 |
++---------------+--------+
+| astaxie/beego | v1.8.3 |
++---------------+--------+
+
+TODO
+====
+
+- 指定重新下载 某话的某页
+
+- config 的json 落地一份？
+
+- web 分页
