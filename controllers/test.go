@@ -6,7 +6,7 @@ type TestController struct {
 }
 
 // TestLogin ...
-// @router /test/login [get]
+// @router /login [get]
 func (c *TestController) TestLogin() {
 	c.Ctx.WriteString("TestLogin")
 }

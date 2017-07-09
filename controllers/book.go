@@ -21,12 +21,14 @@ func (c *BookController) URLMapping() {
 	c.Mapping("/v1/books", c.All)
 }
 
+// All ...
 // @Title Book all
 // @Description get all books
 // @Success 200 {object} models.BooksDTO
-// @router /v1/books [get]
+// @router / [get]
 func (c *BookController) All() {
 	var books []*models.Book
+	// TODO pagination
 	count, err := models.GetAll(&models.Book{}, &books, 10, 0)
 	if err != nil {
 		c.ErrorJSON(err)
@@ -40,7 +42,7 @@ func (c *BookController) All() {
 }
 
 // Create ...
-// @router /v1/books [post]
+// @router / [post]
 func (c *BookController) Create() {
 	b := &models.Book{}
 
@@ -62,7 +64,11 @@ func (c *BookController) Create() {
 }
 
 // Get ...
-// @router /v1/books/:id [get]
+// @Title Book one
+// @Description get book by id
+// @Param id path int true "the bookid you want to get"
+// @Success 200 {object} models.BookDTO
+// @router /:id [get]
 func (c *BookController) Get() {
 	idParam := c.Ctx.Input.Param(":id")
 	id, err := strconv.Atoi(idParam)

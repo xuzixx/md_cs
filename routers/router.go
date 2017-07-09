@@ -13,6 +13,10 @@ import (
 func init() {
 	beego.Router("/", &c.MainController{})
 
-	beego.Include(&c.BookController{})
-	beego.Include(&c.TestController{})
+	ns := beego.NewNamespace("/v1",
+		beego.NSNamespace("/books", beego.NSInclude(&c.BookController{})),
+		beego.NSNamespace("/test", beego.NSInclude(&c.TestController{})),
+	)
+
+	beego.AddNamespace(ns)
 }
