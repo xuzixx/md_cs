@@ -7,14 +7,6 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-// Book ...
-type Book struct {
-	ID   int    `json:"id"`
-	Name string `json:"name"`
-
-	Chapters []*Chapter `orm:"reverse(many)" json:"-"`
-}
-
 // Chapter ...
 type Chapter struct {
 	ID   int    `json:"id"`
@@ -33,6 +25,14 @@ func AddOne(obj interface{}) (int64, error) {
 func GetOne(obj interface{}, cols ...string) error {
 	o := orm.NewOrm()
 	return o.Read(obj, cols...)
+}
+
+// GetAll obj 是指针
+func GetAll(ptrStructOrTableName, objs interface{},
+	limit, offset int, cols ...string) (int64, error) {
+	o := orm.NewOrm()
+	qs := o.QueryTable("book")
+	return qs.Limit(limit, offset).All(objs, cols...)
 }
 
 func init() {

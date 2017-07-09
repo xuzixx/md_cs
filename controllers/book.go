@@ -6,6 +6,8 @@ import (
 	"log"
 	"strconv"
 
+	"github.com/astaxie/beego/logs"
+
 	"github.com/xuzixx/md_cs/models"
 )
 
@@ -19,10 +21,22 @@ func (c *BookController) URLMapping() {
 	c.Mapping("/v1/books", c.All)
 }
 
-// All ...
+// @Title Book all
+// @Description get all books
+// @Success 200 {object} models.BooksDTO
 // @router /v1/books [get]
 func (c *BookController) All() {
-	c.Ctx.WriteString("all")
+	var books []*models.Book
+	count, err := models.GetAll(&models.Book{}, &books, 10, 0)
+	if err != nil {
+		c.ErrorJSON(err)
+		return
+	}
+
+	logs.Info("-----------", count)
+
+	c.SuccessJSON(books)
+	//c.Ctx.WriteString("all")
 }
 
 // Create ...
