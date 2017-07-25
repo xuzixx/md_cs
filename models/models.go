@@ -7,14 +7,6 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-// Chapter ...
-type Chapter struct {
-	ID   int    `json:"id"`
-	Name string `json:"name"`
-
-	Book *Book `orm:"rel(fk)" json:"-"`
-}
-
 // AddOne obj 是指针
 func AddOne(obj interface{}) (int64, error) {
 	o := orm.NewOrm()

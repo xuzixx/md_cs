@@ -32,7 +32,8 @@ func parseIndexHTML(content string) (map[string]string, error) {
 	return idTitles, nil
 }
 
-// FetchOmnibus ...
+// FetchOmnibus 第一步, 根据book url 抓取id + title
+// Return: map: key: id, value: title
 func FetchOmnibus(b g.BookConfig) (map[string]string, error) {
 	req := httplib.Get(b.BookURL)
 	str, err := req.String()

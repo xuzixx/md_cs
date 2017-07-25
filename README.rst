@@ -63,4 +63,13 @@ TODO
 
 - config 的json 落地一份？
 
-- web 分页
+
+web
+---
+
+- 分页
+- createa_at, update_at
+- 正则规则之类的写到conf
+- api add 一本书
+- api 查询 一本书
+- cron 定时查询所有的书是否更新
